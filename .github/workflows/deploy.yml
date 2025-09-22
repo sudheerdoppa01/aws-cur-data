@@ -1,0 +1,54 @@
+name: Terraform Deploy
+
+on:
+  push:
+    branches:
+      - dev
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: us-east-1
+
+jobs:
+  terraform:
+    name: Apply All Modules
+    runs-on: ubuntu-latest
+    environment: dev   # unlocks your dev‐scoped secret
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.TERRAFOROM_GITHUB_OIDC_ROLE_DEV }}
+          aws-region: ${{ env.AWS_REGION }}
+          audience: sts.amazonaws.com
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.13.2
+
+      - name: Terraform Init
+        run: terraform init -input=false
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan (all modules)
+        run: |
+          terraform plan \
+            -var="environment=dev" \
+            -var="region=${{ env.AWS_REGION }}"
+
+      - name: Terraform Apply (all modules)
+        run: |
+          terraform apply \
+            -auto-approve \
+            -var="environment=dev" \
+            -var="region=${{ env.AWS_REGION }}"
