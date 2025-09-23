@@ -15,17 +15,23 @@ resource "aws_glue_catalog_table" "this" {
   }
 
   storage_descriptor {
-    location      = var.s3_location
-    input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
-    output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
-    compressed    = false
+    location          = var.s3_location
+    input_format      = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
+    output_format     = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
+    compressed        = false
     number_of_buckets = -1
 
-    serde_info {
+    ser_de_info {
       name                  = "parquet"
       serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
     }
 
-    columns = var.table_columns
+    dynamic "column" {
+      for_each = var.table_columns
+      content {
+        name = column.value.name
+        type = column.value.type
+      }
+    }
   }
 }
