@@ -17,11 +17,3 @@ variable "s3_location" {
   type        = string
   description = "S3 path where CUR data is stored"
 }
-
-variable "table_columns" {
-  type = list(object({
-    name = string
-    type = string
-  }))
-  description = "List of columns for the Glue table"
-}

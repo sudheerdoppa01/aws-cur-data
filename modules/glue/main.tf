@@ -26,12 +26,22 @@ resource "aws_glue_catalog_table" "this" {
       serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
     }
 
-    dynamic "column" {
-      for_each = var.table_columns
-      content {
-        name = column.value.name
-        type = column.value.type
-      }
+    # Correct way to define columns
+    column {
+      name = "identity_line_item_id"
+      type = "string"
     }
+
+    column {
+      name = "bill_billing_period_start_date"
+      type = "timestamp"
+    }
+
+    column {
+      name = "line_item_usage_account_id"
+      type = "string"
+    }
+
+    # Add more column blocks manually as needed
   }
 }
