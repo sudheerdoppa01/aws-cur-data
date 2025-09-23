@@ -26,22 +26,21 @@ resource "aws_glue_catalog_table" "this" {
       serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
     }
 
-    # Correct way to define columns
-    column {
+    columns {
       name = "identity_line_item_id"
       type = "string"
     }
 
-    column {
+    columns {
       name = "bill_billing_period_start_date"
       type = "timestamp"
     }
 
-    column {
+    columns {
       name = "line_item_usage_account_id"
       type = "string"
     }
 
-    # Add more column blocks manually as needed
+    # Add more columns as needed using `columns` blocks
   }
 }
