@@ -9,3 +9,7 @@ variable "table_name" {
 variable "s3_location" {
   type = string
 }
+
+variable "region" {
+  type = string
+}
