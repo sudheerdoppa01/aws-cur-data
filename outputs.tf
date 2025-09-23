@@ -1,7 +1,11 @@
-output "cur_bucket_name" {
-  value = module.cur_s3_bucket.bucket_name
+output "lambda_function_name" {
+  value = module.lambda.lambda_function_name
 }
 
-output "athena_database" {
-  value = module.athena.db_name
+output "sns_topic_arn" {
+  value = module.sns.topic_arn
+}
+
+output "s3_bucket_name" {
+  value = module.s3.bucket_name
 }

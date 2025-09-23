@@ -1,0 +1,13 @@
+# Terraform
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+*.tfvars
+override.tf
+override.tf.json
+*.tfplan
+
+# Local editor / OS
+.vscode/
+.idea/
+*.log

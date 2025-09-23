@@ -16,7 +16,7 @@ jobs:
   terraform:
     name: Apply All Modules
     runs-on: ubuntu-latest
-    environment: dev   # unlocks your dev‐scoped secret
+    environment: dev   # unlocks your dev-scoped secrets
 
     steps:
       - name: Checkout code
@@ -25,7 +25,7 @@ jobs:
       - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: ${{ secrets.TERRAFOROM_GITHUB_OIDC_ROLE_DEV }}
+          role-to-assume: ${{ secrets.TERRAFORM_GITHUB_OIDC_ROLE_DEV }}
           aws-region: ${{ env.AWS_REGION }}
           audience: sts.amazonaws.com
 
@@ -33,6 +33,11 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.13.2
+
+      - name: Zip Lambda Function
+        run: |
+          cd modules/lambda-monthly-report
+          zip -r lambda.zip lambda_function.py
 
       - name: Terraform Init
         run: terraform init -input=false
