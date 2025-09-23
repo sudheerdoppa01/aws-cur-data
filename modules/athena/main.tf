@@ -1,11 +1,11 @@
-resource "aws_glue_catalog_database" "this" {
-  name        = var.database_name
-  description = var.database_description
+resource "aws_athena_database" "this" {
+  name   = var.database_name
+  bucket = var.output_bucket
 }
 
 resource "aws_glue_catalog_table" "this" {
   name          = var.table_name
-  database_name = aws_glue_catalog_database.this.name
+  database_name = aws_athena_database.this.name
   table_type    = "EXTERNAL_TABLE"
 
   parameters = {
@@ -15,7 +15,7 @@ resource "aws_glue_catalog_table" "this" {
   }
 
   storage_descriptor {
-    location          = var.s3_location
+    location          = "s3://${var.output_bucket}/${var.s3_location}"
     input_format      = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
     output_format     = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
     compressed        = false
@@ -41,6 +41,6 @@ resource "aws_glue_catalog_table" "this" {
       type = "string"
     }
 
-    # Add more columns as needed using `columns` blocks
+    # Add more columns as needed
   }
 }
